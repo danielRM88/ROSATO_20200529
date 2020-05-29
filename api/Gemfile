@@ -43,3 +43,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'rack-cors', '~> 1.1'
 gem 'carrierwave', '~> 2.0'
 gem 'active_model_serializers', '~> 0.10.0'
+gem 'carrierwave-video-thumbnailer', '~> 0.1.4'

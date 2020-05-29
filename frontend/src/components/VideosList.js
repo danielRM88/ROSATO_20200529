@@ -49,6 +49,7 @@ const VideosList = () => {
                   description={v.description}
                   url={v.file_path}
                   category={v.category_name}
+                  thumbnail={v.big_thumbnail_path}
                 />
               );
             })}

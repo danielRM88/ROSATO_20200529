@@ -2,10 +2,44 @@ class FileUploader < CarrierWave::Uploader::Base
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick
   # include CarrierWave::MiniMagick
+  include CarrierWave::Video
+  include CarrierWave::Video::Thumbnailer
 
   # Choose what kind of storage to use for this uploader:
   storage :file
   # storage :fog
+
+  version :thumb do
+    process thumbnail: [{format: 'png', quality: 10, size: 256, strip: true, logger: Rails.logger}]
+  
+    def full_filename for_file
+      png_name for_file, version_name
+    end
+  end
+
+  version :medium_thumb do
+    process thumbnail: [{format: 'png', quality: 10, size: 128, strip: true, logger: Rails.logger}]
+  
+    def full_filename for_file
+      png_name for_file, version_name
+    end
+  end
+
+  version :small_thumb do
+    process thumbnail: [{format: 'png', quality: 10, size: 64, strip: true, logger: Rails.logger}]
+  
+    def full_filename for_file
+      png_name for_file, version_name
+    end
+  end
+
+  # version :medium_thumb, from_version: :thumb do
+  #   process resize_to_fill: [20, 200]
+  # end
+
+  # version :small_thumb, from_version: :thumb do
+  #   process resize_to_fill: [20, 200]
+  # end
 
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
@@ -48,4 +82,8 @@ class FileUploader < CarrierWave::Uploader::Base
   # def filename
   #   "something.jpg" if original_filename
   # end
+
+  def png_name for_file, version_name
+    %Q{#{version_name}_#{for_file.chomp(File.extname(for_file))}.png}
+  end
 end

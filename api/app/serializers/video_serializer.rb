@@ -8,4 +8,8 @@ class VideoSerializer < ActiveModel::Serializer
   attribute :file_path do
     object.file.url
   end
+
+  attribute :big_thumbnail_path do
+    object.file.thumb.url
+  end
 end
