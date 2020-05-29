@@ -1,0 +1,34 @@
+require 'rails_helper'
+
+describe 'Requests for Videos', type: :request do
+  describe 'GET /categories' do
+    context 'there are categories' do
+      before(:each) do
+        Category.destroy_all
+        create(:category, name: 'C1')
+      end
+
+      it 'returns a list of categories' do
+        get categories_path
+
+        expect(response).to be_ok
+        json = JSON.parse(response.body)
+        expect(json.count).to eq(1)
+        expect(json).to match([{
+          'id'=>Category.last.id,
+          'name'=>'C1'
+        }])
+      end
+    end
+
+    context 'no categories created' do
+      it 'returns empty list' do
+        get categories_path
+
+        expect(response).to be_ok
+        json = JSON.parse(response.body)
+        expect(json.count).to eq(0)
+      end
+    end
+  end
+end

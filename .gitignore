@@ -28,6 +28,8 @@
 !/api/storage/.keep
 /api.byebug_history
 
+/api/public/uploads/*
+
 # Ignore master key for decrypting credentials and more.
 /api/config/master.key
 
