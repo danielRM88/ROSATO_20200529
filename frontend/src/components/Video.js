@@ -16,6 +16,7 @@ const Video = ({ title, description, category, url }) => {
           </video>
           <div className="card-body">
             <h5 class="card-title">{title}</h5>
+            <p className="card-text">Category: {category}</p>
             <p className="card-text">{description}</p>
           </div>
         </div>

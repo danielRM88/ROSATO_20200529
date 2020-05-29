@@ -4,6 +4,7 @@ import axios from "axios";
 
 const VideosList = () => {
   const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchVideos();
@@ -12,6 +13,7 @@ const VideosList = () => {
   const fetchVideos = async () => {
     let vids = [];
     try {
+      setLoading(true);
       const res = await axios.get("http://localhost:3000/videos", {
         headers: {
           "Content-Type": "application/json",
@@ -30,24 +32,36 @@ const VideosList = () => {
         console.log(err.response.data.msg);
       }
     }
+    setLoading(false);
   };
 
   return (
     <Fragment>
-      <h4 className="display-4 text-center mb-4">Videos</h4>
-      <div className="row">
-        {videos.map((v, i) => {
-          return (
-            <Video
-              key={i}
-              title={v.title}
-              description={v.description}
-              url={v.file_path}
-              category={v.category_name}
-            />
-          );
-        })}
-      </div>
+      {!loading ? (
+        <div>
+          <h4 className="display-4 text-center mb-4">Videos</h4>
+          <div className="row">
+            {videos.map((v, i) => {
+              return (
+                <Video
+                  key={i}
+                  title={v.title}
+                  description={v.description}
+                  url={v.file_path}
+                  category={v.category_name}
+                />
+              );
+            })}
+          </div>
+        </div>
+      ) : (
+        <div className="d-flex justify-content-center mb-5">
+          <p>Loading Videos...</p>
+          <div className="loader center">
+            <i className="fa fa-cog fa-spin" />
+          </div>
+        </div>
+      )}
     </Fragment>
   );
 };
