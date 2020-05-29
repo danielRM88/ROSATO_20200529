@@ -2,7 +2,7 @@ build:
 	docker-compose build
 
 setup-db:
-	docker-compose run web rake db:create db:migrate db:seed
+	docker-compose run api rake db:create db:migrate db:seed
 
 up:
 	docker-compose up
