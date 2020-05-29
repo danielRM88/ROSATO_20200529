@@ -1,4 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
+import Message from "./Message";
 import axios from "axios";
 
 const VideoUpload = () => {
@@ -8,6 +9,7 @@ const VideoUpload = () => {
   const [categoryId, setCategoryId] = useState();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     fetchCategories();
@@ -25,7 +27,6 @@ const VideoUpload = () => {
 
       cats = res.data;
       console.log(res.data);
-      console.log("Categories loaded");
     } catch (err) {
       if (err.response.status === 500) {
         console.log(err);
@@ -76,20 +77,22 @@ const VideoUpload = () => {
       });
 
       console.log(res.data);
-      console.log("File uploaded");
+      setMessage("File Uploaded");
     } catch (err) {
       if (err.response.status === 500) {
         console.log(err);
         console.log("problem with server");
+        setMessage("There was a problem uploading the file");
       } else {
         console.log(err);
-        console.log(err.response.data.msg);
+        setMessage(err.response.data.errors.join(", "));
       }
     }
   };
 
   return (
     <Fragment>
+      {message ? <Message msg={message} /> : null}
       <h4 className="display-4 text-center mb-4">Upload Video</h4>
       <form onSubmit={uploadFile}>
         <div className="custom-file mb-4 mt-4 form-group">

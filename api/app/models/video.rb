@@ -3,6 +3,7 @@ class Video < ApplicationRecord
 
   belongs_to :category
 
+  validates :title, presence: true
   validates :file, presence: true
 
   delegate :name, to: :category, prefix: true
