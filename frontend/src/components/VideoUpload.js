@@ -10,6 +10,7 @@ const VideoUpload = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchCategories();
@@ -37,7 +38,7 @@ const VideoUpload = () => {
       }
     }
 
-    if (cats.length > 0) {
+    if (cats.length > 0 && categoryId === undefined) {
       setCategoryId(cats[0].id);
     }
 
@@ -70,6 +71,7 @@ const VideoUpload = () => {
     formData.append("category_id", categoryId);
 
     try {
+      setLoading(true);
       const res = await axios.post("http://localhost:3000/videos", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -78,6 +80,13 @@ const VideoUpload = () => {
 
       console.log(res.data);
       setMessage("File Uploaded");
+      setFile("");
+      setFilename("");
+      setTitle("");
+      setDescription("");
+      if (categories.length > 0) {
+        setCategoryId(categories[0].id);
+      }
     } catch (err) {
       if (err.response.status === 500) {
         console.log(err);
@@ -88,72 +97,85 @@ const VideoUpload = () => {
         setMessage(err.response.data.errors.join(", "));
       }
     }
+
+    setLoading(false);
   };
 
   return (
     <Fragment>
-      {message ? <Message msg={message} /> : null}
-      <h4 className="display-4 text-center mb-4">Upload Video</h4>
-      <form onSubmit={uploadFile}>
-        <div className="custom-file mb-4 mt-4 form-group">
-          <input
-            type="file"
-            className="custom-file-input form-control"
-            id="file"
-            onChange={onFileChange}
-          />
-          <label className="custom-file-label" htmlFor="file">
-            {filename}
-          </label>
-        </div>
+      {!loading ? (
+        <div>
+          {message ? <Message msg={message} /> : null}
+          <h4 className="display-4 text-center mb-4">Upload Video</h4>
+          <form onSubmit={uploadFile}>
+            <div className="custom-file mb-4 mt-4 form-group">
+              <input
+                type="file"
+                className="custom-file-input form-control"
+                id="file"
+                onChange={onFileChange}
+              />
+              <label className="custom-file-label" htmlFor="file">
+                {filename}
+              </label>
+            </div>
 
-        <div className="form-group">
-          <label htmlFor="title">Category</label>
-          <select
-            name="category_id"
-            className="form-control"
-            onChange={onCategoryChange}
-          >
-            {categories.map((c, i) => {
-              return (
-                <option key={i} value={c.id}>
-                  {c.name}
-                </option>
-              );
-            })}
-          </select>
-        </div>
+            <div className="form-group">
+              <label htmlFor="title">Category</label>
+              <select
+                name="category_id"
+                className="form-control"
+                onChange={onCategoryChange}
+              >
+                {categories.map((c, i) => {
+                  return (
+                    <option key={i} value={c.id}>
+                      {c.name}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
 
-        <div className="form-group">
-          <label htmlFor="title">Title</label>
-          <input
-            type="text"
-            id="title"
-            name="title"
-            className="form-control"
-            onChange={onTitleChange}
-          />
-        </div>
+            <div className="form-group">
+              <label htmlFor="title">Title</label>
+              <input
+                type="text"
+                id="title"
+                name="title"
+                className="form-control"
+                onChange={onTitleChange}
+              />
+            </div>
 
-        <div className="form-group">
-          <label htmlFor="title">Description</label>
-          <textarea
-            type="text"
-            id="description"
-            name="description"
-            className="form-control"
-            onChange={onDescriptionChange}
-          />
-        </div>
+            <div className="form-group">
+              <label htmlFor="title">Description</label>
+              <textarea
+                type="text"
+                id="description"
+                name="description"
+                className="form-control"
+                onChange={onDescriptionChange}
+              />
+            </div>
 
-        <div className="d-flex justify-content-center">
-          <input
-            type="submit"
-            value="Upload"
-            className="btn btn-primary mt-4"
-          />
+            <div className="d-flex justify-content-center mb-5">
+              <input
+                type="submit"
+                value="Upload"
+                className="btn btn-primary mt-4"
+              />
+            </div>
+          </form>
         </div>
-      </form>
+      ) : (
+        <div className="d-flex justify-content-center mb-5">
+          <p>Uploading...</p>
+          <div className="loader center">
+            <i className="fa fa-cog fa-spin" />
+          </div>
+        </div>
+      )}
     </Fragment>
   );
 };
