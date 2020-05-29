@@ -38,3 +38,8 @@ serialization specification and the model functionality separate.
 ## Further Improvements
 
 Pagination should be added to the `GET /videos` endpoint.
+
+## Note
+
+I pushed the `.env` file to make it easier to build the project, in a real world
+scenario, this file should not be tracked by your repo.
